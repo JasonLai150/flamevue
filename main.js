@@ -24,6 +24,8 @@ import divergenceShader from "./shaders/divergence.wgsl?raw";
 import pressureShader from "./shaders/pressure.wgsl?raw";
 import pressureGradientShader from "./shaders/pressure-gradient.wgsl?raw";
 import renderShader from "./shaders/render.wgsl?raw";
+import heatSourceShader from "./shaders/heat-source.wgsl?raw";
+import temperatureAdvectionShader from "./shaders/temperature-advection.wgsl?raw"
 
 const WORKGROUP_SIZE = 256; // Must match the workgroup size of our compute shaders
 const RESOLUTION = 0.25; // How big the simulation grid will be, with respect to the pixel dimentions of the renderer
@@ -47,7 +49,9 @@ let boundaryProgram,
   viscousityProgram,
   divergenceProgram,
   pressureProgram,
-  pressureGradientProgram;
+  pressureGradientProgram,
+  heatSourceProgram,
+  temperatureAdvectionProgram;
 let renderProgram;
 
 const animate = () => {
@@ -64,6 +68,12 @@ const animate = () => {
   // Run a compute program with MiniGPU
   computer.run(boundaryProgram);
   simulationInput.step(); // After every computation, swap the ping-pong buffers, so the output buffer becomes the input buffer for the next
+
+  computer.run(heatSourceProgram);
+  simulationInput.step();
+
+  computer.run(temperatureAdvectionProgram);
+  simulationInput.step();
 
   computer.run(advectionProgram);
   simulationInput.step();
@@ -138,6 +148,7 @@ const init = async () => {
     resolution: resolution,
     simulation_resolution: simulationResolution,
     delta_time: 8.33 / 1000, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
+    buoyancy: 1.5,
     viscosity: VISCOSITY,
     mouse_position: mousePosition,
     mouse_delta: mouseDelta,
@@ -151,6 +162,7 @@ const init = async () => {
       velocity: () => [0, 0],
       divergence: 0,
       pressure: 0,
+      temperature: 0,
     },
     dataSize
   );
@@ -215,6 +227,22 @@ const init = async () => {
   pressureGradientProgram = new ComputeProgram(
     device,
     `${shaderHeader} ${shaderCommon} ${pressureGradientShader}`,
+    inputs,
+    data.count,
+    WORKGROUP_SIZE
+  );
+
+  heatSourceProgram = new ComputeProgram(
+    device,
+    `${shaderHeader} ${shaderCommon} ${heatSourceShader}`,
+    inputs,
+    data.count,
+    WORKGROUP_SIZE
+  );
+
+  temperatureAdvectionProgram = new ComputeProgram(
+    device,
+    `${shaderHeader} ${shaderCommon} ${temperatureAdvectionShader}`,
     inputs,
     data.count,
     WORKGROUP_SIZE

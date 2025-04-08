@@ -21,6 +21,8 @@ fn main(@builtin(global_invocation_id) global_id : vec3<u32>) {
 
   strength = smoothstep(vec2<f32>(0.95), vec2<f32>(1), strength) * 2.0;
   var velocity = uniforms.mouse_delta * strength * strength;
-
+  
   (*next_state).velocity = (*next_state).velocity + velocity;
+
+  (*next_state).velocity.y += uniforms.buoyancy * current_state.temperature * uniforms.delta_time;
 }
