@@ -31,7 +31,7 @@ fn get_cell_bilinear(grid_position: vec2<f32>) -> CellData {
   let index_a = u32(coord_to_index(coord_a));
   let index_b = u32(coord_to_index(coord_b));
   let index_c = u32(coord_to_index(coord_c));
-  let index_d = u32(coord_to_index(coord_b));
+  let index_d = u32(coord_to_index(coord_d));//originally let index_d = u32(coord_to_index(coord_b));
 
   let cell_a = input[index_a];
   let cell_b = input[index_b];
@@ -44,6 +44,8 @@ fn get_cell_bilinear(grid_position: vec2<f32>) -> CellData {
   result.velocity = mix(mix(cell_a.velocity, cell_b.velocity, u), mix(cell_d.velocity, cell_c.velocity, u), v);
   result.divergence = mix(mix(cell_a.divergence, cell_b.divergence, u), mix(cell_d.divergence, cell_c.divergence, u), v);
   result.pressure = mix(mix(cell_a.pressure, cell_b.pressure, u), mix(cell_d.pressure, cell_c.pressure, u), v);
+  result.temperature = mix(mix(cell_a.temperature, cell_b.temperature, u), mix(cell_d.temperature, cell_c.temperature, u), v);
+
 
   return result;
 }
