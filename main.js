@@ -29,7 +29,7 @@ import temperatureAdvectionShader from "./shaders/temperature-advection.wgsl?raw
 
 const WORKGROUP_SIZE = 256; // Must match the workgroup size of our compute shaders
 const RESOLUTION = 0.25; // How big the simulation grid will be, with respect to the pixel dimentions of the renderer
-const VISCOSITY = 2; // How 'sticky' our fluid will be (higher = more sticky)
+const VISCOSITY = 2.5; // How 'sticky' our fluid will be (higher = more sticky)
 
 const canvas = document.querySelector("canvas");
 const clock = new Clock();
@@ -147,11 +147,15 @@ const init = async () => {
   uniforms = new UniformsInput(device, {
     resolution: resolution,
     simulation_resolution: simulationResolution,
-    delta_time: 8.33 / 1000, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
-    buoyancy: 1.5,
+    delta_time: 8.33 / 2000, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
+    buoyancy: 50.0,
     viscosity: VISCOSITY,
     mouse_position: mousePosition,
     mouse_delta: mouseDelta,
+    temperature_decay: 2.5,
+    velocity_damping: 1,
+    gravity_force: 25.0,
+    noise_strength: 100,
   });
 
   const dataSize = simulationResolution[0] * simulationResolution[1]; // Simulation width * height, to get our total number of grid cells

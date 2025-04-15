@@ -16,6 +16,10 @@ struct Uniforms {
   viscosity : f32,
   mouse_position : vec2<f32>,
   mouse_delta : vec2<f32>,
+  temperature_decay: f32,
+  velocity_damping: f32,
+  gravity_force: f32,
+  noise_strength: f32,
 }
 
 @group(1) @binding(0) var<uniform> uniforms : Uniforms;

@@ -10,10 +10,10 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
   let cellY = f32(index / u32(simRes.x));
   let cellPos = index_to_coord(f32(index));
 
-  let wickPos = vec2<f32>(simRes.x * 0.5, simRes.y * 0.1);
+  let wickPos = vec2<f32>(simRes.x * 0.5, simRes.y * 0.8);
   let dist = distance(cellPos, wickPos);
 
-  let heatRadius = 5.0;
+  let heatRadius = 10.0;
   
   // Read the current simulation data.
   let cell = input[index];

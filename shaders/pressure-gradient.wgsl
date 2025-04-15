@@ -1,7 +1,7 @@
 @compute @workgroup_size(256, 1, 1)
 fn main(@builtin(global_invocation_id) global_id : vec3<u32>) {
   let count = arrayLength(&output);
-  let index = global_id.x * (global_id.y + 1) * (global_id.z + 1);
+  let index = global_id.x;
 
   if (index >= count) {
     return;
@@ -26,7 +26,9 @@ fn main(@builtin(global_invocation_id) global_id : vec3<u32>) {
   let right = neighbors[1];
   let down = neighbors[2];
   let left = neighbors[3];
+
   let grad_pressure = vec2<f32>(right.pressure - left.pressure, down.pressure - up.pressure) * 0.5;
 
-  (*next_state).velocity = current_state.velocity - grad_pressure * uniforms.delta_time;
+  // ✅ Subtract pressure gradient additively
+  (*next_state).velocity -= grad_pressure * uniforms.delta_time;
 }

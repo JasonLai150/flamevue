@@ -66,24 +66,24 @@ fn fragment_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
   // Get the temperature value from the cell.
   let t = interpolated_cell_data.temperature;
-
-  // Map the temperature to color.
-  // For instance, we can create a gradient:
-  //   - When t is low (near 0), we map it to black.
-  //   - As t increases, we mix to red.
-  //   - And for higher t, we transition from red to yellow, then to white.
+  
   var color: vec4<f32>;
-
-  // Adjust these thresholds as needed to fit the range of your temperature values.
-  if (t < 0.5) {
-    // Cold: blend from black to red.
-    color = mix(vec4<f32>(0.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 0.0, 0.0, 1.0), t / 0.5);
+  
+  /*if(t < 0.01) {
+    color.a = 1;
+    color = vec4<f32>(0.0, 0.0, 0.0, 1.0);
+  } else*/ if (t < 0.2) {
+  // Smoke: blend from gray to black
+  color = mix(vec4<f32>(0.1, 0.1, 0.1, 1.0), vec4<f32>(0.0, 0.0, 0.0, 1.0), t / 0.2);
+  } else if (t < 0.5) {
+    // Cold flame: blend from black to red
+    let tt = (t - 0.2) / (0.5 - 0.2);
+    color = mix(vec4<f32>(0.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 0.0, 0.0, 1.0), tt);
   } else if (t < 1.0) {
-    // Warmer: blend from red to yellow.
+    // Hotter: red to yellow
     color = mix(vec4<f32>(1.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 0.0, 1.0), (t - 0.5) / 0.5);
   } else {
-    // Hottest: blend from yellow to white.
-    // You can clamp the mix factor to ensure it stays within [0, 1].
+    // Hottest: yellow to white
     let factor = min((t - 1.0) / 0.5, 1.0);
     color = mix(vec4<f32>(1.0, 1.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), factor);
   }

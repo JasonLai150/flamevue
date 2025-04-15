@@ -33,6 +33,9 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
   // Update temperature with advected value
   newCell.temperature = sampled.temperature;
 
+  //temperature decay
+  newCell.temperature *= exp(-uniforms.temperature_decay * uniforms.delta_time);
+
   // Store result
   output[index] = newCell;
 }
