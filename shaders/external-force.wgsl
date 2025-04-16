@@ -40,8 +40,13 @@ fn main(@builtin(global_invocation_id) global_id : vec3<u32>) {
 
   //noise (wind etc)
   let pos = coord_to_position(coord);
-  let flicker = sin(pos.x * 10.0 + uniforms.delta_time * 30.0) * cos(pos.y * 10.0 - uniforms.delta_time * 20.0);
-  let flicker_strength = flicker * current_state.temperature * 0.1;
   let noise = uniforms.noise_strength;
-  (*next_state).velocity.x += noise*flicker_strength;
+
+  let flickerx = sin(pos.x * 10.0 + uniforms.elapsed_time * 30.0) * cos(pos.y * 10.0 - uniforms.elapsed_time * 20.0);
+  let flicker_strength_x = flickerx * current_state.temperature * 0.1;
+  let flickery = sin(pos.y * 20.0 + uniforms.elapsed_time * 20.0) * cos(pos.y * 20.0 - uniforms.elapsed_time * 30.0);
+  let flicker_strength_y = flickery * current_state.temperature * 0.1;
+
+  //(*next_state).velocity.x += noise*flicker_strength_x;
+  //(*next_state).velocity.y += noise*flicker_strength_y;
 }

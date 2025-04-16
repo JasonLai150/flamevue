@@ -20,6 +20,8 @@ struct Uniforms {
   velocity_damping: f32,
   gravity_force: f32,
   noise_strength: f32,
+  elapsed_time: f32,
+  temp_injected: f32,
 }
 
 @group(1) @binding(0) var<uniform> uniforms : Uniforms;

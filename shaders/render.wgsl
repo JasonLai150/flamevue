@@ -66,26 +66,35 @@ fn fragment_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
   // Get the temperature value from the cell.
   let t = interpolated_cell_data.temperature;
-  
+  let heatRatio = clamp(t / uniforms.temp_injected, 0.0, 1.0); // Clamp for safety
+
   var color: vec4<f32>;
-  
-  /*if(t < 0.01) {
-    color.a = 1;
-    color = vec4<f32>(0.0, 0.0, 0.0, 1.0);
-  } else*/ if (t < 0.2) {
-  // Smoke: blend from gray to black
-  color = mix(vec4<f32>(0.1, 0.1, 0.1, 1.0), vec4<f32>(0.0, 0.0, 0.0, 1.0), t / 0.2);
-  } else if (t < 0.5) {
-    // Cold flame: blend from black to red
-    let tt = (t - 0.2) / (0.5 - 0.2);
+
+  if (heatRatio < 0.002) {
+  // Smoke: gray → black
+  let tt = heatRatio / 0.002;
+  color = mix(vec4<f32>(0.15, 0.15, 0.15, 1.0), vec4<f32>(0.0, 0.0, 0.0, 1.0), tt);
+
+  } else if (heatRatio < 0.005) {
+    // Black → red
+    let tt = (heatRatio - 0.002) / 0.003;
     color = mix(vec4<f32>(0.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 0.0, 0.0, 1.0), tt);
-  } else if (t < 1.0) {
-    // Hotter: red to yellow
-    color = mix(vec4<f32>(1.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 0.0, 1.0), (t - 0.5) / 0.5);
+
+  } else if (heatRatio < 0.015) {
+    // Red → orange
+    let tt = (heatRatio - 0.005) / 0.01;
+    color = mix(vec4<f32>(1.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 0.5, 0.0, 1.0), tt);
+
+  } else if (heatRatio < 0.03) {
+    // Orange → yellow
+    let tt = (heatRatio - 0.015) / 0.015;
+    color = mix(vec4<f32>(1.0, 0.5, 0.0, 1.0), vec4<f32>(1.0, 1.0, 0.0, 1.0), tt);
+
   } else {
-    // Hottest: yellow to white
-    let factor = min((t - 1.0) / 0.5, 1.0);
-    color = mix(vec4<f32>(1.0, 1.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), factor);
-  }
+    // Yellow → white
+    let tt = min((heatRatio - 0.03) / 0.02, 1.0);
+    color = mix(vec4<f32>(1.0, 1.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), tt);
+}
+
   return color;
 }
