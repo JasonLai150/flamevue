@@ -61,9 +61,10 @@ const animate = () => {
   vec2.scale(mouseDelta, mouseDelta, 1 - 0.01 * delta);
 
   // MiniGPU allows us to access and update our uniforms by name
-  uniforms.member.delta_time = Math.max(Math.min(delta, 33.33), 8) / 1000; // Clamp to keep in a sensible range.
+  uniforms.member.delta_time = Math.max(Math.min(delta, 33.33), 8) / 400; // Clamp to keep in a sensible range.
   uniforms.member.mouse_position = mousePosition;
   uniforms.member.mouse_delta = mouseDelta;
+  uniforms.member.elapsed_time = clock.elapsedTime;
 
   // Run a compute program with MiniGPU
   computer.run(boundaryProgram);
@@ -147,15 +148,17 @@ const init = async () => {
   uniforms = new UniformsInput(device, {
     resolution: resolution,
     simulation_resolution: simulationResolution,
-    delta_time: 8.33 / 2000, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
+    delta_time: 8.33 / 400, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
     buoyancy: 50.0,
     viscosity: VISCOSITY,
     mouse_position: mousePosition,
     mouse_delta: mouseDelta,
     temperature_decay: 2.5,
     velocity_damping: 1,
-    gravity_force: 25.0,
-    noise_strength: 100,
+    gravity_force: 50.0,
+    noise_strength: 300,
+    elapsed_time: 0,
+    temp_injected: 100,
   });
 
   const dataSize = simulationResolution[0] * simulationResolution[1]; // Simulation width * height, to get our total number of grid cells

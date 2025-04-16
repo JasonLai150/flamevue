@@ -21,7 +21,7 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
   
   if (dist < heatRadius) {
     let heatFactor = 1.0 - (dist / heatRadius);
-    let heatAmount = 100.0 * heatFactor * uniforms.delta_time;
+    let heatAmount = uniforms.temp_injected * heatFactor * uniforms.delta_time;
     updatedCell.temperature = cell.temperature + heatAmount;
   }
   
