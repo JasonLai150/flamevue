@@ -153,7 +153,7 @@ const init = async () => {
     viscosity: VISCOSITY,
     mouse_position: mousePosition,
     mouse_delta: mouseDelta,
-    temperature_decay: 2.5,
+    temperature_decay: 3,
     velocity_damping: 1,
     gravity_force: 50.0,
     noise_strength: 300,
