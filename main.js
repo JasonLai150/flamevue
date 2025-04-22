@@ -158,7 +158,8 @@ const init = async () => {
     gravity_force: 50.0,
     noise_strength: 300,
     elapsed_time: 0,
-    temp_injected: 100,
+    temp_injected: 500,
+    heat_radius: 10.0,
   });
 
   const dataSize = simulationResolution[0] * simulationResolution[1]; // Simulation width * height, to get our total number of grid cells
@@ -279,6 +280,24 @@ const init = async () => {
   window.addEventListener("mousedown", onMouseDown);
 
   requestAnimationFrame(animate);
+
+  // Add this after the init() function
+  const heatRadiusSlider = document.getElementById('heatRadius');
+  const noiseStrengthSlider = document.getElementById('noiseStrength');
+  const heatRadiusValue = document.getElementById('heatRadiusValue');
+  const noiseStrengthValue = document.getElementById('noiseStrengthValue');
+
+  heatRadiusSlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    heatRadiusValue.textContent = value;
+    uniforms.member.heat_radius = value;
+  });
+
+  noiseStrengthSlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    noiseStrengthValue.textContent = value;
+    uniforms.member.noise_strength = value;
+  });
 };
 
 init();

@@ -1,5 +1,3 @@
-
-
 /*struct VertexInput {
   @location(0) position : vec4<f32>,
   @location(2) texcoord : vec2<f32>,
@@ -70,29 +68,25 @@ fn fragment_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
   var color: vec4<f32>;
 
-  if (heatRatio < 0.002) {
-  // Smoke: gray → black
-  let tt = heatRatio / 0.002;
-  color = mix(vec4<f32>(0.15, 0.15, 0.15, 1.0), vec4<f32>(0.0, 0.0, 0.0, 1.0), tt);
-
-  } else if (heatRatio < 0.005) {
+  if (heatRatio < 0.001) {
+    // Smoke: gray → black
+    let tt = heatRatio / 0.001;
+    color = mix(vec4<f32>(0.15, 0.15, 0.15, 1.0), vec4<f32>(0.0, 0.0, 0.0, 1.0), tt);
+  } else if (heatRatio < 0.003) {
     // Black → red
-    let tt = (heatRatio - 0.002) / 0.003;
+    let tt = (heatRatio - 0.001) / 0.002;
     color = mix(vec4<f32>(0.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 0.0, 0.0, 1.0), tt);
-
-  } else if (heatRatio < 0.015) {
+  } else if (heatRatio < 0.01) {
     // Red → orange
-    let tt = (heatRatio - 0.005) / 0.01;
+    let tt = (heatRatio - 0.003) / 0.007;
     color = mix(vec4<f32>(1.0, 0.0, 0.0, 1.0), vec4<f32>(1.0, 0.5, 0.0, 1.0), tt);
-
-  } else if (heatRatio < 0.03) {
+  } else if (heatRatio < 0.02) {
     // Orange → yellow
-    let tt = (heatRatio - 0.015) / 0.015;
+    let tt = (heatRatio - 0.01) / 0.01;
     color = mix(vec4<f32>(1.0, 0.5, 0.0, 1.0), vec4<f32>(1.0, 1.0, 0.0, 1.0), tt);
-
   } else {
     // Yellow → white
-    let tt = min((heatRatio - 0.03) / 0.02, 1.0);
+    let tt = min((heatRatio - 0.02) / 0.01, 1.0);
     color = mix(vec4<f32>(1.0, 1.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), tt);
   }
   return color;

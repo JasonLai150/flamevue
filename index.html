@@ -7,6 +7,18 @@
   </head>
   <body>
     <canvas></canvas>
+    <div class="controls">
+      <div class="slider-container">
+        <label for="heatRadius">Heat Radius:</label>
+        <input type="range" id="heatRadius" min="5" max="50" value="10" step="1">
+        <span id="heatRadiusValue">10</span>
+      </div>
+      <div class="slider-container">
+        <label for="noiseStrength">Noise Strength:</label>
+        <input type="range" id="noiseStrength" min="0" max="1000" value="300" step="10">
+        <span id="noiseStrengthValue">300</span>
+      </div>
+    </div>
     <script type="module" src="./main.js"></script>
   </body>
   <style>
@@ -16,6 +28,29 @@
       left: 0;
       width: 100%;
       height: 100%;
+    }
+    .controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      z-index: 1000;
+    }
+    .slider-container {
+      margin-bottom: 15px;
+    }
+    .slider-container label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .slider-container input {
+      width: 200px;
+    }
+    .slider-container span {
+      margin-left: 10px;
     }
   </style>
 </html>
