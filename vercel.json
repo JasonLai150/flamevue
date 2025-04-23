@@ -1,26 +1,5 @@
 {
-    "builds": [
-      {
-        "src": "*.html",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "*.js",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "shaders/**",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "flamewallshaders/**",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "lavalampshaders/**",
-        "use": "@vercel/static"
-      }
-    ],
-    "cleanUrls": false
+    "cleanUrls": false,
+    "outputDirectory": "docs"
   }
   
