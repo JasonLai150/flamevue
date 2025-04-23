@@ -149,7 +149,7 @@ const init = async () => {
     resolution: resolution,
     simulation_resolution: simulationResolution,
     delta_time: 8.33 / 400, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
-    buoyancy: 50.0,
+    buoyancy: 25.0,
     viscosity: VISCOSITY,
     mouse_position: mousePosition,
     mouse_delta: mouseDelta,
@@ -158,7 +158,8 @@ const init = async () => {
     gravity_force: 50.0,
     noise_strength: 3,
     elapsed_time: 0,
-    temp_injected: 150,
+    temp_injected: 100,
+    heat_radius: 10,
   });
 
   const dataSize = simulationResolution[0] * simulationResolution[1]; // Simulation width * height, to get our total number of grid cells
@@ -279,6 +280,33 @@ const init = async () => {
   window.addEventListener("mousedown", onMouseDown);
 
   requestAnimationFrame(animate);
+  
+  const heatRadiusSlider = document.getElementById('heatRadius');
+  const noiseStrengthSlider = document.getElementById('noiseStrength');
+  const fireTempSlider = document.getElementById('fireTemp');
+
+  const heatRadiusValue = document.getElementById('heatRadiusValue');
+  const noiseStrengthValue = document.getElementById('noiseStrengthValue');
+  const fireTempValue = document.getElementById('fireTempValue');
+
+  heatRadiusSlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    heatRadiusValue.textContent = value;
+    uniforms.member.heat_radius = value;
+  });
+
+  noiseStrengthSlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    noiseStrengthValue.textContent = value;
+    uniforms.member.noise_strength = value;
+  });
+
+  fireTempSlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    fireTempValue.textContent = value;
+    uniforms.member.temp_injected = value;
+  });
+  
 };
 
 init();
