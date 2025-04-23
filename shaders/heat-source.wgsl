@@ -47,15 +47,13 @@ fn main(@builtin(global_invocation_id) GlobalInvocationID: vec3<u32>) {
   // Compute distance to wick line (Y-only)
   let distY = abs(cellY - wickY);
 
-  let heatRadius = 10.0;
-
   let cell = input[index];
   var updatedCell = cell;
   
   if (distY < wickThickness) {
-    let heatFactor = 1.0 - (distY / wickThickness);
+    let heatFactor = 1.0 + ((wickY-cellY) / wickThickness);
     let rand = hash2(vec2<u32>(u32(cellX), u32(cellY)));
-    let heatAmount = (uniforms.temp_injected + uniforms.temp_injected * rand) * heatFactor * uniforms.delta_time;
+    let heatAmount = (uniforms.temp_injected + uniforms.temp_injected) * heatFactor * uniforms.delta_time;
     updatedCell.temperature = cell.temperature + heatAmount;
   }
 
