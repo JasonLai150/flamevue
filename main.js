@@ -156,9 +156,9 @@ const init = async () => {
     temperature_decay: 3,
     velocity_damping: 1,
     gravity_force: 50.0,
-    noise_strength: 300,
+    noise_strength: 3,
     elapsed_time: 0,
-    temp_injected: 100,
+    temp_injected: 150,
   });
 
   const dataSize = simulationResolution[0] * simulationResolution[1]; // Simulation width * height, to get our total number of grid cells
