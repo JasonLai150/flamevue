@@ -1,4 +1,16 @@
 {
-    "cleanUrls": false
-}
-  
+    "cleanUrls": false,
+    "rewrites": [
+      { "source": "/flamewall.html", "destination": "/flamewall.html" },
+      { "source": "/lavalamp.html", "destination": "/lavalamp.html" },
+      { "source": "/index.html", "destination": "/index.html" }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      }
+    ]
+  }
