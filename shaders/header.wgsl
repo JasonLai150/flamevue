@@ -22,6 +22,7 @@ struct Uniforms {
   noise_strength: f32,
   elapsed_time: f32,
   temp_injected: f32,
+  heat_radius: f32
 }
 
 @group(1) @binding(0) var<uniform> uniforms : Uniforms;

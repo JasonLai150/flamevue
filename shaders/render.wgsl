@@ -95,6 +95,5 @@ fn fragment_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let tt = min((heatRatio - 0.03) / 0.02, 1.0);
     color = mix(vec4<f32>(1.0, 1.0, 0.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), tt);
 }
-
   return color;
 }

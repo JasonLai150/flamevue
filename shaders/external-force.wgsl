@@ -38,15 +38,31 @@ fn main(@builtin(global_invocation_id) global_id : vec3<u32>) {
   let damping = uniforms.velocity_damping;
   (*next_state).velocity *= damping;
 
-  //noise (wind etc)
+  //let flickerx = sin(pos.x * 10.0 + uniforms.elapsed_time * 30.0) * cos(pos.y * 10.0 - uniforms.elapsed_time * 20.0);
+  //let flicker_strength_x = flickerx * current_state.temperature * 0.1;
+
+  //(*next_state).velocity.x += noise * flicker_strength_x;
+  //(*next_state).velocity.y += noise*flicker_strength_y;
+
+  //grid based wind
   let pos = coord_to_position(coord);
   let noise = uniforms.noise_strength;
 
-  let flickerx = sin(pos.x * 10.0 + uniforms.elapsed_time * 30.0) * cos(pos.y * 10.0 - uniforms.elapsed_time * 20.0);
-  let flicker_strength_x = flickerx * current_state.temperature * 0.1;
-  let flickery = sin(pos.y * 20.0 + uniforms.elapsed_time * 20.0) * cos(pos.y * 20.0 - uniforms.elapsed_time * 30.0);
-  let flicker_strength_y = flickery * current_state.temperature * 0.1;
+  let gridCoord = vec2<u32>(u32(pos.x), u32(pos.y));
+  let windCell = gridCoord / 16u;
 
-  //(*next_state).velocity.x += noise*flicker_strength_x;
-  //(*next_state).velocity.y += noise*flicker_strength_y;
+  let timeCycle = floor(uniforms.elapsed_time * 0.1);
+
+  let windSeed = windCell + vec2<u32>(u32(timeCycle));
+  let angle = hash2(windSeed) * 6.2831853;
+
+  let wind = vec2<f32>(cos(angle), sin(angle));
+
+  (*next_state).velocity += noise * wind;
+}
+
+fn hash2(p: vec2<u32>) -> f32 {
+  var x = p.x * 374761393u + p.y * 668265263u;
+  x = (x ^ (x >> 13u)) * 1274126177u;
+  return f32(x & 0x7FFFFFFFu) / f32(0x7FFFFFFF); // ∈ [0, 1]
 }
