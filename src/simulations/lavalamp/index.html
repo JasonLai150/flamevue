@@ -8,23 +8,11 @@
   <body>
     <canvas></canvas>
     <div class="redirect-buttons">
-      <a href="index.html" class="sim-button">Flame</a>
-      <a href="flamewall.html" class="sim-button current">Flame Wall</a>
-      <a href="lavalamp.html" class="sim-button">Lava Lamp</a>
+      <a href="/index.html" class="sim-button">Flame</a>
+      <a href="/simulations/flamewall/index.html" class="sim-button">Flame Wall</a>
+      <a href="/simulations/lavalamp/index.html" class="sim-button current">Lava Lamp</a>
     </div>
-    <div class="controls">
-      <div class="slider-container">
-        <label for="noiseStrength" class="slider-text">Noise Strength:</label>
-        <input type="range" id="noiseStrength" min="0" max="20" value="3" step="1">
-        <span id="noiseStrengthValue">3</span>
-      </div>
-      <div class="slider-container">
-        <label for="fireTemp" class="slider-text">Fire Temperature:</label>
-        <input type="range" id="fireTemp" min="10" max="1000" value="200" step="10">
-        <span id="fireTempValue">200</span>
-      </div>
-    </div>
-    <script type="module" src="./flamewall.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
   <style>
     .redirect-buttons {

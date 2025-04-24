@@ -14,22 +14,22 @@ import { primitives } from "twgl.js";
 import { vec2 } from "gl-matrix";
 
 // With Vite, if we add ?raw to the path, we get it as the plain text shader
-import shaderHeader from "./flamewallshaders/header.wgsl?raw";
-import shaderCommon from "./flamewallshaders/common.wgsl?raw";
-import boundaryShader from "./flamewallshaders/boundary.wgsl?raw";
-import externalForceShader from "./flamewallshaders/external-force.wgsl?raw";
-import advectionShader from "./flamewallshaders/advection.wgsl?raw";
-import viscousityShader from "./flamewallshaders/viscousity.wgsl?raw";
-import divergenceShader from "./flamewallshaders/divergence.wgsl?raw";
-import pressureShader from "./flamewallshaders/pressure.wgsl?raw";
-import pressureGradientShader from "./flamewallshaders/pressure-gradient.wgsl?raw";
-import renderShader from "./flamewallshaders/render.wgsl?raw";
-import heatSourceShader from "./flamewallshaders/heat-source.wgsl?raw";
-import temperatureAdvectionShader from "./flamewallshaders/temperature-advection.wgsl?raw"
+import shaderHeader from "./shaders/header.wgsl?raw";
+import shaderCommon from "./shaders/common.wgsl?raw";
+import boundaryShader from "./shaders/boundary.wgsl?raw";
+import externalForceShader from "./shaders/external-force.wgsl?raw";
+import advectionShader from "./shaders/advection.wgsl?raw";
+import viscousityShader from "./shaders/viscousity.wgsl?raw";
+import divergenceShader from "./shaders/divergence.wgsl?raw";
+import pressureShader from "./shaders/pressure.wgsl?raw";
+import pressureGradientShader from "./shaders/pressure-gradient.wgsl?raw";
+import renderShader from "./shaders/render.wgsl?raw";
+import heatSourceShader from "./shaders/heat-source.wgsl?raw";
+import temperatureAdvectionShader from "./shaders/temperature-advection.wgsl?raw"
 
 const WORKGROUP_SIZE = 256; // Must match the workgroup size of our compute shaders
 const RESOLUTION = 0.25; // How big the simulation grid will be, with respect to the pixel dimentions of the renderer
-const VISCOSITY = 1; // How 'sticky' our fluid will be (higher = more sticky)
+const VISCOSITY = 2; // How 'sticky' our fluid will be (higher = more sticky)
 
 const canvas = document.querySelector("canvas");
 const clock = new Clock();
@@ -61,15 +61,14 @@ const animate = () => {
   vec2.scale(mouseDelta, mouseDelta, 1 - 0.01 * delta);
 
   // MiniGPU allows us to access and update our uniforms by name
-  uniforms.member.delta_time = Math.max(Math.min(delta, 33.33), 8) / 400; // Clamp to keep in a sensible range.
+  uniforms.member.delta_time = Math.max(Math.min(delta, 33.33), 8) / 1000; // Clamp to keep in a sensible range.
   uniforms.member.mouse_position = mousePosition;
   uniforms.member.mouse_delta = mouseDelta;
-  uniforms.member.elapsed_time = clock.elapsedTime;
 
   // Run a compute program with MiniGPU
-  /*computer.run(boundaryProgram);
+  computer.run(boundaryProgram);
   simulationInput.step(); // After every computation, swap the ping-pong buffers, so the output buffer becomes the input buffer for the next
-  */
+
   computer.run(heatSourceProgram);
   simulationInput.step();
 
@@ -148,18 +147,11 @@ const init = async () => {
   uniforms = new UniformsInput(device, {
     resolution: resolution,
     simulation_resolution: simulationResolution,
-    delta_time: 8.33 / 400, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
-    buoyancy: 50.0,
+    delta_time: 8.33 / 1000, // The timestep (as a fraction of a second), which will be calculated and updated on each frame
+    buoyancy: 1.5,
     viscosity: VISCOSITY,
     mouse_position: mousePosition,
     mouse_delta: mouseDelta,
-    temperature_decay: 3,
-    velocity_damping: 1,
-    gravity_force: 50.0,
-    noise_strength: 3,
-    elapsed_time: 0,
-    temp_injected: 100,
-    heat_radius: 10,
   });
 
   const dataSize = simulationResolution[0] * simulationResolution[1]; // Simulation width * height, to get our total number of grid cells
@@ -280,25 +272,6 @@ const init = async () => {
   window.addEventListener("mousedown", onMouseDown);
 
   requestAnimationFrame(animate);
-  
-  const noiseStrengthSlider = document.getElementById('noiseStrength');
-  const fireTempSlider = document.getElementById('fireTemp');
-
-  const noiseStrengthValue = document.getElementById('noiseStrengthValue');
-  const fireTempValue = document.getElementById('fireTempValue');
-
-  noiseStrengthSlider.addEventListener('input', (e) => {
-    const value = parseFloat(e.target.value);
-    noiseStrengthValue.textContent = value;
-    uniforms.member.noise_strength = value;
-  });
-
-  fireTempSlider.addEventListener('input', (e) => {
-    const value = parseFloat(e.target.value);
-    fireTempValue.textContent = value;
-    uniforms.member.temp_injected = value;
-  });
-  
 };
 
 init();
