@@ -1,6 +1,6 @@
 # Fire Simulation in WebGPU
 
-https://stablefluidsflame.vercel.app/
+https://flamevue.vercel.app/
 
 This is a stable-fluids based simulation of fire running on GPU through WebGPU and the miniGPU library. Based on isjackwild's stable fluid simulation. To run, you will need to use Chrome Canary and enable WebGPU in flags.
 
